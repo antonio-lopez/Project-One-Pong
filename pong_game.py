@@ -118,7 +118,7 @@ class CompXPaddle(pygame.sprite.Sprite):
 
 
 class YPaddle(pygame.sprite.Sprite):
-    def __index__(self, color, w, h):
+    def __init__(self, color, w, h):
         super().__init__()
 
         self.image = pygame.Surface([w, h])
@@ -141,11 +141,112 @@ class YPaddle(pygame.sprite.Sprite):
 
 pygame.init()
 
+gameDisplay = pygame.display.set_mode((windowWidth, windowHeight))
+pygame.display.set_caption('Pong')
+
+# set up paddles with image backgrounds
+y_pad_image = pygame.image.load("")
+x_pad_image = pygame.image.load("")
+ball_image = pygame.image.load("")
+
+# set up player paddles
+player_y_pad = YPaddle(black, 10, 100)
+player_y_pad.rect.x = 680
+player_y_pad.rect.y = 200
+
+player_x_pad = XPaddle(black, 100, 10)
+player_x_pad.rect.x = 600
+player_x_pad.rect.y = 10
+
+player_x2_pad = XPaddle(black, 100, 10)
+player_x2_pad.x = 600
+player_x2_pad.rect.y = 480
+
+# set up computer paddles
+comp_y_pad = YPaddle(black, 10, 100)
+comp_y_pad.rect.x = 10
+comp_y_pad.rect.y = 200
+
+comp_x_pad = CompXPaddle(black, 100, 10)
+comp_x_pad.rect.x = 20
+comp_x_pad.rect.y = 10
+
+comp_x2_pad = CompXPaddle(black, 100, 10)
+comp_x2_pad.rect.x = 20
+comp_x2_pad.rect.y = 480
+
+# set up ball
+ball = Ball(black, 20)
+ball.rect.x = 345
+ball.rect.y = 195
+
+# load images
+player_x_pad.image = x_pad_image
+player_x2_pad.image = x_pad_image
+player_y_pad.image = y_pad_image
+comp_x_pad.image = x_pad_image
+comp_x2_pad.image = x_pad_image
+comp_y_pad = y_pad_image
+ball.image = ball_image
+
+sprites = pygame.sprite.Group()
+sprites.add(player_x_pad)
+sprites.add(player_x2_pad)
+sprites.add(player_y_pad)
+sprites.add(comp_x_pad)
+sprites.add(comp_x2_pad)
+sprites.add(comp_y_pad)
+sprites.add(ball)
+
+
 player_score = 0
 players_win = 0
 comp_score = 0
 comp_win = 0
+end_game = 0
 
-gameDisplay = pygame.display.set_mode((windowWidth, windowHeight))
-pygame.display.set_caption('Pong')
+score = ScoreBoard()
+clock = pygame.time.Clock()
+
+while True:
+    keys = pygame.key.get_pressed()
+    # check for the QUIT event
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+
+    # player movements
+    if keys[pygame.K_UP]:
+        player_y_pad.move_up(5)
+    if keys[pygame.K_DOWN]:
+        player_y_pad.move_down(5)
+    if keys[pygame.K_RIGHT]:
+        player_x_pad.move_right(5)
+        player_x2_pad.move_right(5)
+    if keys[pygame.K_LEFT]:
+        player_x_pad.move_left(5)
+        player_x2_pad.move_left(5)
+
+    # computer paddle moves along with the ball
+    if ball.velocity[0] < 0 and ball.velocity[1] > 0:
+        comp_y_pad.move_down(5)
+    if ball.velocity[0] < 0 and ball.velocity[1] < 0:
+        comp_y_pad.move_up(5)
+    if ball.velocity[0] < 0 and ball.velocity[1] > 0:
+        comp_x_pad.move_right(5)
+        comp_x2_pad.move_right(5)
+    if ball.velocity[0] < 0 and ball.velocity[1] < 0:
+        comp_x_pad.move_left(5)
+        comp_x2_pad.move_left(5)
+
+    sprites.update()
+    gameDisplay.fill(green)
+
+    # draw middle line
+    pygame.draw.line(gameDisplay, black, [349, 0], [349, 500], 5)
+    x = 0
+    while x < 1000:
+        pygame.draw.line(gameDisplay, green, [0, x], [500, x], 20)
+        x = x + 50
 
