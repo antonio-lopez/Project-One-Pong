@@ -134,15 +134,25 @@ class YPaddle(pygame.sprite.Sprite):
 
 
 def score_update(comp_point, player_point, comp_update, player_update):
-    text_font = pygame.font.Font(None, 74)
+    text_font = pygame.font.Font(None, 50)
     score_text = text_font.render(str(comp_point), 1, WHITE)
-    gameDisplay.blit(score_text, (250, 10))
+    gameDisplay.blit(score_text, (220, 10))
+    score_text = text_font.render(str("/11"), 1, WHITE)
+    gameDisplay.blit(score_text, (280, 10))
+
+    score_text = text_font.render(str(player_point), 1, WHITE)
+    gameDisplay.blit(score_text, (380, 10))
+    score_text = text_font.render(str("/11"), 1, WHITE)
+    gameDisplay.blit(score_text, (450, 10))
+
     score_text = text_font.render(str(comp_update), 1, WHITE)
     gameDisplay.blit(score_text, (250, 50))
-    score_text = text_font.render(str(player_point), 1, WHITE)
-    gameDisplay.blit(score_text, (420, 10))
+    score_text = text_font.render(str("/3"), 1, WHITE)
+    gameDisplay.blit(score_text, (280, 50))
     score_text = text_font.render(str(player_update), 1, WHITE)
     gameDisplay.blit(score_text, (420, 50))
+    score_text = text_font.render(str("/3"), 1, WHITE)
+    gameDisplay.blit(score_text, (450, 50))
 
 
 class Scoreboard:
@@ -159,6 +169,8 @@ player_score = 0
 comp_score = 0
 player_win = 0
 comp_win = 0
+total_wins = 0
+game_limit = 5
 end_game = 0
 
 # set up paddles with image backgrounds
@@ -259,7 +271,7 @@ while True:
     # middle of screen at random velocities
     if ball.rect.x >= 690:
         comp_score += 1
-        pygame.mixer.music.load('computer_point.mp3')
+        pygame.mixer.music.load('computer_point.ogg')
         pygame.mixer.music.play(0)
         ball.rect.x = 345
         ball.rect.y = 195
@@ -267,7 +279,7 @@ while True:
         ball.velocity[1] = random.randint(-8, 8)
     if ball.rect.x > 350 and (ball.rect.y < 10 or ball.rect.y > 490):
         comp_score += 1
-        pygame.mixer.music.load('computer_point.mp3')
+        pygame.mixer.music.load('computer_point.ogg')
         pygame.mixer.music.play(0)
         ball.rect.x = 345
         ball.rect.y = 195
@@ -275,7 +287,7 @@ while True:
         ball.velocity[1] = random.randint(-8, 8)
     if ball.rect.x <= 0:
         player_score += 1
-        pygame.mixer.music.load('player_point.mp3')
+        pygame.mixer.music.load('player_point.ogg')
         pygame.mixer.music.play(0)
         ball.rect.x = 345
         ball.rect.y = 195
@@ -283,7 +295,7 @@ while True:
         ball.velocity[1] = random.randint(-8, 8)
     if ball.rect.x < 350 and (ball.rect.y < 10 or ball.rect.y > 490):
         player_score += 1
-        pygame.mixer.music.load('player_point.mp3')
+        pygame.mixer.music.load('player_point.ogg')
         pygame.mixer.music.play(0)
         ball.rect.x = 345
         ball.rect.y = 195
@@ -304,9 +316,10 @@ while True:
     text = font.render(str(comp_score), 1, WHITE)
 
     # game win sounds and end game rematch prompt
-    if player_win == 3:
+    game_limit = comp_win + player_win
+    if player_win == 3 and total_wins <= game_limit:
         if end_game == 0:
-            pygame.mixer.music.load('victory_fanfare.ogg')
+            pygame.mixer.music.load('winner_song.ogg')
             pygame.mixer.music.play(0)
             end_game = 1
         ball.velocity[0] = 0
@@ -328,7 +341,7 @@ while True:
             player_win = 0
             end_game = 0
 
-    if comp_win == 3:
+    if comp_win == 3 and total_wins <= game_limit:
         if end_game == 0:
             pygame.mixer.music.load('loser_song.ogg')
             pygame.mixer.music.play(0)
