@@ -312,7 +312,7 @@ while True:
         player_score = 0
         player_win += 1
 
-    font = pygame.font.Font(None, 50)
+    font = pygame.font.Font(None, 30)
     text = font.render(str(comp_score), 1, WHITE)
 
     # game win sounds and end game rematch prompt
@@ -324,8 +324,8 @@ while True:
             end_game = 1
         ball.velocity[0] = 0
         ball.velocity[1] = 0
-        text = font.render(str('YOU WIN! REMATCH? Y/N'), 1, WHITE)
-        gameDisplay.blit(text, (120, 250))
+        text = font.render(str('PLAYER WINS! REMATCH? Y/N'), 1, WHITE)
+        gameDisplay.blit(text, (170, 250))
         if keys[pygame.K_n]:
             pygame.mixer.music.stop()
             pygame.quit()
@@ -348,8 +348,8 @@ while True:
             end_game = 1
         ball.velocity[0] = 0
         ball.velocity[1] = 0
-        text = font.render(str('YOU LOSE! REMATCH? Y/N'), 1, WHITE)
-        gameDisplay.blit(text, (120, 250))
+        text = font.render(str('COMPUTER WINS! REMATCH? Y/N'), 1, WHITE)
+        gameDisplay.blit(text, (170, 250))
         if keys[pygame.K_n]:
             pygame.mixer.music.stop()
             pygame.quit()
