@@ -1,4 +1,4 @@
-# Project One: PONG w/o walls
+# Project One: PONG w/o walls (CS 386-02)
 
 ![image](https://github.com/antonio-lopez/Project-One-Pong/blob/master/pong_screencap.png)
 
